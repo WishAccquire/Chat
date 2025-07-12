@@ -1,5 +1,5 @@
 import Project from "../models/project.model.js";
-import { addUsertoproject, createProject, getAllProjectByUserId, getprojectbyid } from "../services/project.service.js";
+import { addUsertoproject, createProject, getAllProjectByUserId, getprojectbyid,updateFileTrees } from "../services/project.service.js";
 import { validationResult} from 'express-validator';
 import userModel from '../models/user.model.js';
 
@@ -12,6 +12,7 @@ export const createProjectController = async (req, res)=>{
      }
      try{
         const{ name }= req.body;
+        console.log(req.body)
      const loggedInUser = await userModel.findOne({email:req.user.email});
      const userId=loggedInUser._id
     const newProject=await createProject({name,userId})
@@ -85,8 +86,10 @@ export const updateFileTree=async (req,res)=>{
    try{
 
       const {projectId,fileTree}=req.body
+      fileTree=JSON.parse(fileTree)
+      console.log("File tree received:", fileTree);
 
-      const project=await updateFileTree({projectId,fileTree})
+      const project=await updateFileTrees({projectId,fileTree})
       return res.status(200).json(project)
 
     }catch(err){
